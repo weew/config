@@ -1,0 +1,50 @@
+<?php
+
+namespace Weew\Config;
+
+interface IConfigLoader {
+    /**
+     * @return Config
+     */
+    function load();
+
+    /**
+     * @return array
+     */
+    function getPaths();
+
+    /**
+     * @param array $paths
+     */
+    function setPaths(array $paths);
+
+    /**
+     * @param $path
+     */
+    function addPath($path);
+
+    /**
+     * @param array $paths
+     */
+    function addPaths(array $paths);
+
+    /**
+     * @return IConfigDriver[]
+     */
+    function getDrivers();
+
+    /**
+     * @param IConfigDriver[] $drivers
+     */
+    function setDrivers(array $drivers);
+
+    /**
+     * @param IConfigDriver $driver
+     */
+    function addDriver(IConfigDriver $driver);
+
+    /**
+     * @param array $drivers
+     */
+    function addDrivers(array $drivers);
+}
