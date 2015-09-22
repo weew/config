@@ -16,16 +16,43 @@ class ConfigLoader implements IConfigLoader {
     protected $drivers;
 
     /**
+     * @var string
+     */
+    protected $environment;
+
+    /**
+     * @var IEnvironmentDetector
+     */
+    protected $detector;
+
+    /**
+     * @param string $environment
      * @param array $paths
      * @param IConfigDriver[]|null $drivers
+     * @param IEnvironmentDetector $detector
      */
-    public function __construct(array $paths = [], array $drivers = null) {
+    public function __construct(
+        $environment = null,
+        array $paths = [],
+        array $drivers = null,
+        IEnvironmentDetector $detector = null
+    ) {
+        if ($environment === null) {
+            $environment = 'dev';
+        }
+
         if ($drivers === null) {
             $drivers = $this->createDefaultConfigDrivers();
         }
 
+        if ( ! $detector instanceof IEnvironmentDetector) {
+            $detector = $this->createEnvironmentDetector();
+        }
+
+        $this->setEnvironment($environment);
         $this->setPaths($paths);
         $this->setDrivers($drivers);
+        $this->setEnvironmentDetector($detector);
     }
 
     /**
@@ -39,6 +66,20 @@ class ConfigLoader implements IConfigLoader {
         }
 
         return new Config($this->processConfiguration($configs));
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEnvironment() {
+        return $this->environment;
+    }
+
+    /**
+     * @param $environment
+     */
+    public function setEnvironment($environment) {
+        $this->environment = $environment;
     }
 
     /**
@@ -82,7 +123,11 @@ class ConfigLoader implements IConfigLoader {
      * @param IConfigDriver[] $drivers
      */
     public function setDrivers(array $drivers) {
-        $this->drivers = $drivers;
+        $this->drivers = [];
+
+        foreach ($drivers as $driver) {
+            $this->addDriver($driver);
+        }
     }
 
     /**
@@ -99,6 +144,27 @@ class ConfigLoader implements IConfigLoader {
         foreach ($drivers as $driver) {
             $this->addDriver($driver);
         }
+    }
+
+    /**
+     * @return IEnvironmentDetector
+     */
+    public function getEnvironmentDetector() {
+        return $this->detector;
+    }
+
+    /**
+     * @param IEnvironmentDetector $detector
+     */
+    public function setEnvironmentDetector(IEnvironmentDetector $detector) {
+        $this->detector = $detector;
+    }
+
+    /**
+     * @return EnvironmentDetector
+     */
+    public function createEnvironmentDetector() {
+        return new EnvironmentDetector();
     }
 
     /**
@@ -124,9 +190,11 @@ class ConfigLoader implements IConfigLoader {
     protected function loadFile($path) {
         $path = realpath($path);
 
-        foreach ($this->getDrivers() as $driver) {
-            if ($driver->supports($path)) {
-                return $driver->loadFile($path);
+        if ($this->matchEnvironment($path)) {
+            foreach ($this->getDrivers() as $driver) {
+                if ($driver->supports($path)) {
+                    return $driver->loadFile($path);
+                }
             }
         }
 
@@ -141,10 +209,17 @@ class ConfigLoader implements IConfigLoader {
     protected function loadDirectory($path) {
         $configs = [];
 
-        foreach (directory_list($path) as $directory) {
-            $configs[] = $this->loadPath(
-                path($path, $directory)
-            );
+        if ($this->matchEnvironment($path)) {
+            $files = directory_list_files($path);
+            $directories = directory_list_directories($path);
+
+            $files = array_merge($files, $directories);
+
+            foreach ($files as $file) {
+                $nextPath = path($path, $file);
+
+                $configs[] = $this->loadPath($nextPath);
+            }
         }
 
         return $this->processConfiguration($configs);
@@ -170,5 +245,20 @@ class ConfigLoader implements IConfigLoader {
         }
 
         return $config;
+    }
+
+    /**
+     * @param $path
+     *
+     * @return bool
+     */
+    protected function matchEnvironment($path) {
+        $env = $this->getEnvironmentDetector()->detectEnvironment($path);
+
+        if ($env === null || $env == $this->getEnvironment()) {
+            return true;
+        }
+
+        return false;
     }
 }

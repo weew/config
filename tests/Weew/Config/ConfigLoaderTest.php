@@ -48,7 +48,7 @@ class ConfigLoaderTest extends PHPUnit_Framework_TestCase {
     }
 
     public function test_add_drivers() {
-        $loader = new ConfigLoader([], []);
+        $loader = new ConfigLoader(null, [], []);
         $loader->addPath(path(__DIR__, 'configs/good'));
         $config = $loader->load();
         $this->assertTrue(count($config->toArray()) == 0);
@@ -58,9 +58,38 @@ class ConfigLoaderTest extends PHPUnit_Framework_TestCase {
     }
 
     public function test_add_paths() {
-        $loader = new ConfigLoader(['foo']);
+        $loader = new ConfigLoader(null, ['foo']);
         $loader->addPath('bar');
         $loader->addPaths(['yolo', 'swag']);
         $this->assertEquals(['foo', 'bar', 'yolo', 'swag'], $loader->getPaths());
+    }
+
+    public function test_load_with_environment() {
+        $loader = new ConfigLoader();
+        $loader->addPath(path(__DIR__, 'configs/env'));
+        $config = $loader->load()->toArray();
+
+        $this->assertEquals(['foo' => 'dev', 'value' => 'dev', 'bar' => 'foo'], $config);
+
+        $loader->setEnvironment('dev');
+        $config = $loader->load()->toArray();
+        $this->assertEquals(
+            ['foo' => 'dev', 'value' => 'dev', 'bar' => 'foo'],
+            $config
+        );
+
+        $loader->setEnvironment('test');
+        $config = $loader->load()->toArray();
+        $this->assertEquals(
+            ['foo' => 'test', 'value' => 'test', 'bar' => 'foo'],
+            $config
+        );
+
+        $loader->setEnvironment('prod');
+        $config = $loader->load()->toArray();
+        $this->assertEquals(
+            ['foo' => 'prod', 'value' => 'prod', 'bar' => 'foo'],
+            $config
+        );
     }
 }

@@ -9,6 +9,26 @@ interface IConfigLoader {
     function load();
 
     /**
+     * @return string
+     */
+    function getEnvironment();
+
+    /**
+     * @param $environment
+     */
+    function setEnvironment($environment);
+
+    /**
+     * @return IEnvironmentDetector
+     */
+    function getEnvironmentDetector();
+
+    /**
+     * @param IEnvironmentDetector $detector
+     */
+    function setEnvironmentDetector(IEnvironmentDetector $detector);
+
+    /**
      * @return array
      */
     function getPaths();
