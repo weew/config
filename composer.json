@@ -1,0 +1,30 @@
+{
+    "name": "php-config",
+    "description": "Very simple configuration loader.",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Maxim Kott",
+            "email": "maximkott@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
+    },
+    "require": {
+        "weew/php-helpers-file": "0.*",
+        "weew/php-helpers-array": "0.*",
+        "weew/php-foundation": "0.*"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^4.7",
+        "satooshi/php-coveralls": "^0.6.1"
+    }
+}
