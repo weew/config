@@ -40,4 +40,14 @@ interface IConfig extends IArrayable {
      * @param $key
      */
     function remove($key);
+
+    /**
+     * @param array $config
+     */
+    function merge(array $config);
+
+    /**
+     * @param IConfig $config
+     */
+    function extend(IConfig $config);
 }

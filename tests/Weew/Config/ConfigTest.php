@@ -36,4 +36,65 @@ class ConfigTest extends PHPUnit_Framework_TestCase {
         $config->remove('yolo.swag');
         $this->assertFalse($config->has('yolo.swag'));
     }
+
+    public function test_merge() {
+        $config = new Config([
+            'foo' => 'bar',
+            'baz' => [
+                'yolo' => 'swag',
+                'items' => [1, 2, 3, 4],
+            ],
+        ]);
+        $this->assertEquals([
+            'foo' => 'bar',
+            'baz' => [
+                'yolo' => 'swag',
+                'items' => [1, 2, 3, 4],
+            ]
+        ], $config->toArray());
+
+        $config->merge([
+            'foo' => 'swag',
+            'baz' => [
+                'foo' => 'bar',
+                'items' => [9, 10],
+            ],
+        ]);
+        $this->assertEquals([
+            'foo' => 'swag',
+            'baz' => [
+                'yolo' => 'swag',
+                'items' => [9, 10],
+                'foo' => 'bar',
+            ]
+        ], $config->toArray());
+    }
+
+    public function test_extend() {
+        $array1 = [
+            'foo' => [
+                'a' => 'b',
+                'bar' => [1, 2, 3,]
+            ]
+        ];
+        $array2 = [
+            'foo' => [
+                'x' => 'y',
+                'bar' => [5],
+            ],
+        ];
+
+        $config1 = new Config($array1);
+        $config2 = new Config($array2);
+
+        $config1->extend($config2);
+
+        $this->assertEquals([
+            'foo' => [
+                'a' => 'b',
+                'x' => 'y',
+                'bar' => [5],
+            ],
+        ], $config1->toArray());
+    }
 }

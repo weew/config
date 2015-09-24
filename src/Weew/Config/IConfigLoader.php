@@ -4,9 +4,11 @@ namespace Weew\Config;
 
 interface IConfigLoader {
     /**
+     * @param IConfig $config
+     *
      * @return Config
      */
-    function load();
+    function load(IConfig $config = null);
 
     /**
      * @return string

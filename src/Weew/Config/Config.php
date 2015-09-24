@@ -9,9 +9,20 @@ class Config implements IConfig {
     protected $config;
 
     /**
-     * @param array $config
+     * @var IConfigParser
      */
-    public function __construct(array $config = []) {
+    protected $parser;
+
+    /**
+     * @param array $config
+     * @param IConfigParser $parser
+     */
+    public function __construct(array $config = [], IConfigParser $parser = null) {
+        if ( ! $parser instanceof IConfigParser) {
+            $parser = $this->createConfigParser();
+        }
+
+        $this->setConfigParser($parser);
         $this->setConfig($config);
     }
 
@@ -36,7 +47,8 @@ class Config implements IConfig {
      * @return mixed
      */
     public function get($key, $default = null) {
-        return array_get($this->config, $key, $default);
+        return $this->getConfigParser()
+            ->parse($this, array_get($this->config, $key, $default));
     }
 
     /**
@@ -63,10 +75,48 @@ class Config implements IConfig {
         array_remove($this->config, $key);
     }
 
+    /**
+     * @param array $config
+     */
+    public function merge(array $config) {
+        $this->setConfig(
+            array_extend_distinct($this->getConfig(), $config)
+        );
+    }
+
+    /**
+     * @param IConfig $config
+     */
+    public function extend(IConfig $config) {
+        $this->merge($config->getConfig());
+    }
+
     /**$
      * @return array
      */
     public function toArray() {
-        return $this->config;
+        return $this->getConfigParser()
+            ->parse($this, $this->getConfig());
+    }
+
+    /**
+     * @return ConfigParser
+     */
+    protected function createConfigParser() {
+        return new ConfigParser();
+    }
+
+    /**
+     * @return IConfigParser
+     */
+    public function getConfigParser() {
+        return $this->parser;
+    }
+
+    /**
+     * @param IConfigParser $parser
+     */
+    public function setConfigParser(IConfigParser $parser) {
+        $this->parser = $parser;
     }
 }

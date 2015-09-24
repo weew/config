@@ -56,16 +56,26 @@ class ConfigLoader implements IConfigLoader {
     }
 
     /**
+     * @param IConfig $config
+     *
      * @return Config
      */
-    public function load() {
+    public function load(IConfig $config = null) {
+        if ( ! $config instanceof IConfig) {
+            $config = $this->createConfig();
+        }
+
         $configs = [];
 
         foreach ($this->getPaths() as $path) {
             $configs[] = $this->loadPath($path);
         }
 
-        return new Config($this->processConfiguration($configs));
+        $config->merge(
+            $this->processConfiguration($configs)
+        );
+
+        return $config;
     }
 
     /**
@@ -217,7 +227,6 @@ class ConfigLoader implements IConfigLoader {
 
             foreach ($files as $file) {
                 $nextPath = path($path, $file);
-
                 $configs[] = $this->loadPath($nextPath);
             }
         }
@@ -260,5 +269,12 @@ class ConfigLoader implements IConfigLoader {
         }
 
         return false;
+    }
+
+    /**
+     * @return Config
+     */
+    protected function createConfig() {
+        return new Config();
     }
 }
