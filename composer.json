@@ -21,7 +21,8 @@
     "require": {
         "weew/php-helpers-file": "0.*",
         "weew/php-helpers-array": "0.*",
-        "weew/php-foundation": "0.*"
+        "weew/php-foundation": "0.*",
+        "symfony/yaml": "^2.7"
     },
     "require-dev": {
         "phpunit/phpunit": "^4.7",

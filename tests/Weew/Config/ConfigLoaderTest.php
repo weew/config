@@ -104,4 +104,16 @@ class ConfigLoaderTest extends PHPUnit_Framework_TestCase {
             'section' => ['yolo' => 2],
         ], $config->toArray());
     }
+
+    public function test_load_yaml_files() {
+        $loader = new ConfigLoader();
+        $loader->addPath(path(__DIR__, 'configs/config.yml'));
+        $config = $loader->load();
+
+        $this->assertEquals([
+            'foo' => 'bar',
+            'bar' => 'foo',
+            'section' => ['yolo' => 'swag'],
+        ], $config->toArray());
+    }
 }

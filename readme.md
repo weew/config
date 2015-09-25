@@ -34,7 +34,7 @@ $config = $loader->load();
 
 ## Configuration formats
 
-Currently the plain PHP and INI formats are supported.
+Following formats are supported out of the box.
 
 Plain PHP format example:
 
@@ -57,6 +57,16 @@ my = configurations
 database = foo
 username = root
 password = bar
+```
+
+YAML format example:
+
+```yaml
+my: 'configurations'
+db:
+    database: 'foo'
+    username: 'root'
+    password: 'bar'
 ```
 
 ## Environments

@@ -4,6 +4,7 @@ namespace Weew\Config;
 
 use Weew\Config\Drivers\ArrayConfigDriver;
 use Weew\Config\Drivers\IniConfigDriver;
+use Weew\Config\Drivers\YamlConfigDriver;
 
 class ConfigLoader implements IConfigLoader {
     /**
@@ -241,7 +242,8 @@ class ConfigLoader implements IConfigLoader {
     protected function createDefaultConfigDrivers() {
         return [
             new ArrayConfigDriver(),
-            new IniConfigDriver()
+            new IniConfigDriver(),
+            new YamlConfigDriver()
         ];
     }
 
