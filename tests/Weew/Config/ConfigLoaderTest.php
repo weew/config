@@ -92,4 +92,16 @@ class ConfigLoaderTest extends PHPUnit_Framework_TestCase {
             $config
         );
     }
+
+    public function test_load_ini_files() {
+        $loader = new ConfigLoader();
+        $loader->addPath(path(__DIR__, 'configs/config.ini'));
+        $config = $loader->load();
+
+        $this->assertEquals([
+            'foo' => 'bar',
+            'bar' => 'foo',
+            'section' => ['yolo' => 2],
+        ], $config->toArray());
+    }
 }

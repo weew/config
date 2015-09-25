@@ -34,7 +34,9 @@ $config = $loader->load();
 
 ## Configuration formats
 
-Currently, the only supported format is plain PHP. Simply create a file that returns an array with your configurations. I am planning to add the YAML driver some time soon.
+Currently the plain PHP and INI formats are supported.
+
+Plain PHP format example:
 
 ```php
 return [
@@ -45,6 +47,16 @@ return [
         'password' => 'bar',
     ],
 ];
+```
+INI format example:
+
+```ini
+my = configurations
+
+[db]
+database = foo
+username = root
+password = bar
 ```
 
 ## Environments
