@@ -49,9 +49,11 @@ return [
 
 ## Environments
 
+Often you want to split your configurations in multiple files or directories and load them depending on your current environment. This can be achieved trought the environment settings.
+
 ### Setting an environment
 
-Often you want to split your configurations in multiple files or directories and load them depending on your current environment. This can be achieved trought the environment settings. Out of the box it comes with support for dev, test and prod environments. Custom environments can be added on the fly.
+Out of the box it comes with support for dev, test and prod environments. Custom environments can be added on the fly.
 
 ```php
 $loader->setEnviroonment('prod');
@@ -64,9 +66,9 @@ To understand how environments detection works, lets take a look at this directo
 ```
 - test
     - db.php
-- prod 
+- prod
     - db.php
-- config.php    
+- config.php
 - config_test.php
 - config_prod.php
 ```
@@ -77,16 +79,33 @@ Files and folders that have been added to the config loader will be loaded in th
 
 ### Adding custom environments
 
-To create your own environments you'll have to register a new rule on the environment detector. The first argument is the name of the rule and the second one is an array of triggers.
+To create your own environments you'll have to register a new rule on the environment detector. The first argument is the name of the environment and the second one is an array of masks.
 
 ```php
 $loader->getEnvironmentDetector()
-    ->addRule('integ', ['_integ', '_integration', '_stage']);
+    ->addRule('integ', ['integ', 'integration', 'stage']);
 ```
 
-Basically this rule says - all files and folders that have a '\_integ' or '\_integration' or '\_stage' in their name belong in the 'integ' environment;
+Basically this rule says - all files and folders that have a '\_integ' or '\_integration' or '\_stage' in their name belong in the 'integ' environment. Below is a list of some files and directories that would match the integration environment ():
 
-## Extending 
+```
+- stage
+- _stage
+- foo_stage
+- _stage.txt
+- foo_stage.txt
+```
+
+This files will not match:
+
+```
+- stagefoo
+- foostage
+- foo_stage_bar
+- _stagebar
+```
+
+## Extending
 
 Config loader provides you multiple extension points to alter its behaviour and functionality.
 

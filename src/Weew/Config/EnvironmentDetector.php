@@ -9,9 +9,9 @@ class EnvironmentDetector implements IEnvironmentDetector {
     protected $rules = [];
 
     public function __construct() {
-        $this->addRule('prod', ['_prod', '_production']);
-        $this->addRule('dev', ['_dev', '_development']);
-        $this->addRule('test', ['_test']);
+        $this->addRule('prod', ['prod', 'production']);
+        $this->addRule('dev', ['dev', 'development']);
+        $this->addRule('test', ['test']);
     }
 
     /**
@@ -36,13 +36,15 @@ class EnvironmentDetector implements IEnvironmentDetector {
      * @param array $abbreviations
      */
     public function addRule($name, array $abbreviations) {
-        $pattern = $this->createPatternForStrings($abbreviations);
-
         if (array_get($this->rules, $name) === null) {
             $this->rules[$name] = [];
         }
 
-        $this->rules[$name][] = $pattern;
+        $patterns = $this->createPatternsForStrings($abbreviations);
+
+        foreach ($patterns as $pattern) {
+            $this->rules[$name][] = $pattern;
+        }
     }
 
     /**
@@ -50,15 +52,15 @@ class EnvironmentDetector implements IEnvironmentDetector {
      *
      * @return string
      */
-    protected function createPatternForStrings(array $strings) {
-        $groups = [];
+    protected function createPatternsForStrings(array $strings) {
+        $patterns = [];
 
         foreach ($strings as $string) {
-            $groups[] = preg_quote("$string");
+            $patterns[] = s('#(%s)$#', preg_quote("_$string"));
+            $patterns[] = s('#(%s)\.#', preg_quote("_$string"));
+            $patterns[] = s('#^(%s)$#', preg_quote("$string"));
         }
 
-        $pattern = s('#%s#', implode('|', $groups));
-
-        return $pattern;
+        return $patterns;
     }
 }
