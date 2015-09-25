@@ -262,7 +262,8 @@ class ConfigLoader implements IConfigLoader {
      * @return bool
      */
     protected function matchEnvironment($path) {
-        $env = $this->getEnvironmentDetector()->detectEnvironment($path);
+        $env = $this->getEnvironmentDetector()
+            ->detectEnvironment(basename($path));
 
         if ($env === null || $env == $this->getEnvironment()) {
             return true;
