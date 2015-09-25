@@ -79,14 +79,14 @@ Files and folders that have been added to the config loader will be loaded in th
 
 ### Adding custom environments
 
-To create your own environments you'll have to register a new rule on the environment detector. The first argument is the name of the environment and the second one is an array of masks.
+To create your own environments you'll have to register a new rule on the environment detector. The first argument is the name of the environment and the second is an array of masks.
 
 ```php
 $loader->getEnvironmentDetector()
     ->addRule('integ', ['integ', 'integration', 'stage']);
 ```
 
-Basically this rule says - all files and folders that have a '\_integ' or '\_integration' or '\_stage' in their name belong in the 'integ' environment. Below is a list of some files and directories that would match the integration environment ():
+Below is a list of some files and directories that would match the integration environment:
 
 ```
 - stage

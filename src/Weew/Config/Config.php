@@ -91,7 +91,7 @@ class Config implements IConfig {
         $this->merge($config->getConfig());
     }
 
-    /**$
+    /**
      * @return array
      */
     public function toArray() {
