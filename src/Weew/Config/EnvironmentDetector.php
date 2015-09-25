@@ -9,9 +9,9 @@ class EnvironmentDetector implements IEnvironmentDetector {
     protected $rules = [];
 
     public function __construct() {
-        $this->addRule('prod', ['prod', 'production']);
-        $this->addRule('dev', ['dev', 'development']);
-        $this->addRule('test', ['test']);
+        $this->addRule('prod', ['_prod', '_production']);
+        $this->addRule('dev', ['_dev', '_development']);
+        $this->addRule('test', ['_test']);
     }
 
     /**
@@ -54,7 +54,7 @@ class EnvironmentDetector implements IEnvironmentDetector {
         $groups = [];
 
         foreach ($strings as $string) {
-            $groups[] = preg_quote("_$string");
+            $groups[] = preg_quote("$string");
         }
 
         $pattern = s('#%s#', implode('|', $groups));
