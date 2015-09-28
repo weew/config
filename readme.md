@@ -10,6 +10,7 @@
 - [Installation](#installation)
 - [Loading configurations](#loading-configurations)
 - [Cofiguration formats](#configuration-formats)
+- [References](#references)
 - [Environments](#environments)
     - [Setting an environment](#setting-an-environment)
     - [How it works](#how-it-works)
@@ -73,6 +74,26 @@ Json format example:
     }
 }
 ```
+
+## References
+
+You can always reference to other config values from within a config file. To create a reference, simple wrap a config key with curly braces {config.key}`.
+
+```php
+// config1
+return [
+    'list' => [
+        'foo' => 'bar'
+    ]
+];
+
+// config2
+return [
+    'reference' => '{list.foo}'
+];
+```
+
+Now when you access the `reference` value you will get "bar" in return. Keep in mind that references are interpolated at access time (when you call $config->get()). This means that if you change a config value, everyone who references it will receive it's updated value and not the old one.
 
 ## Environments
 

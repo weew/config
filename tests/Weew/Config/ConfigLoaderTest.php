@@ -116,4 +116,19 @@ class ConfigLoaderTest extends PHPUnit_Framework_TestCase {
             'section' => ['yolo' => 'swag'],
         ], $config->toArray());
     }
+
+    public function test_load_with_references() {
+        $loader = new ConfigLoader();
+        $loader->addPath(path(__DIR__, 'configs/references'));
+        $config = $loader->load();
+
+        $this->assertEquals([
+            'list' => ['foo' => 'bar'],
+            'nested' => ['list' => ['value' => 'bar']],
+        ], $config->toArray());
+
+        $this->assertEquals(
+            ['list' => ['value' => 'bar']], $config->get('nested')
+        );
+    }
 }
