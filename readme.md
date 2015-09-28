@@ -40,33 +40,38 @@ Plain PHP format example:
 
 ```php
 return [
-    'my' => 'configurations',
-    'db' => [
-        'database' => 'foo',
-        'username' => 'root',
-        'password' => 'bar',
+    'key' => 'value',
+    'list' => [
+        'key' => 'value',
     ],
 ];
 ```
 INI format example:
 
 ```ini
-my = configurations
+key = value
 
-[db]
-database = foo
-username = root
-password = bar
+[list]
+key = value
 ```
 
 YAML format example:
 
 ```yaml
-my: 'configurations'
-db:
-    database: 'foo'
-    username: 'root'
-    password: 'bar'
+key: 'value'
+list:
+    key: value
+```
+
+Json format example:
+
+```json
+{
+    "key": "value",
+    "list": {
+        "key": "value",
+    }
+}
 ```
 
 ## Environments
