@@ -19,9 +19,9 @@
         }
     },
     "require": {
-        "weew/php-helpers-file": "0.*",
-        "weew/php-helpers-array": "0.*",
-        "weew/php-foundation": "0.*",
+        "weew/php-helpers-file": "^1.0.0",
+        "weew/php-helpers-array": "^1.0.0",
+        "weew/php-foundation": "^1.0.0",
         "symfony/yaml": "^2.7"
     },
     "require-dev": {
