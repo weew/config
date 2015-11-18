@@ -2,7 +2,7 @@
 
 namespace Weew\Config;
 
-use Weew\Foundation\Interfaces\IArrayable;
+use Weew\Contracts\IArrayable;
 
 interface IConfig extends IArrayable {
     /**
