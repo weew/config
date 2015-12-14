@@ -9,9 +9,7 @@ class EnvironmentDetector implements IEnvironmentDetector {
     protected $rules = [];
 
     public function __construct() {
-        $this->addRule('prod', ['prod', 'production']);
-        $this->addRule('dev', ['dev', 'development']);
-        $this->addRule('test', ['test']);
+        $this->addDefaultRules();
     }
 
     /**
@@ -45,6 +43,15 @@ class EnvironmentDetector implements IEnvironmentDetector {
         foreach ($patterns as $pattern) {
             $this->rules[$name][] = $pattern;
         }
+    }
+
+    /**
+     * Register default environment rules.
+     */
+    protected function addDefaultRules() {
+        $this->addRule('prod', ['prod', 'production']);
+        $this->addRule('dev', ['dev', 'development']);
+        $this->addRule('test', ['test']);
     }
 
     /**
