@@ -4,6 +4,8 @@ namespace Tests\Weew\Config;
 
 use PHPUnit_Framework_TestCase;
 use Weew\Config\Config;
+use Weew\Config\Exceptions\MissingConfigException;
+use Weew\Config\IConfig;
 
 class ConfigTest extends PHPUnit_Framework_TestCase {
     public function test_get_and_set_config() {
@@ -96,5 +98,19 @@ class ConfigTest extends PHPUnit_Framework_TestCase {
                 'bar' => [5],
             ],
         ], $config1->toArray());
+    }
+
+    public function test_ensure_key_exists() {
+        $config = new Config();
+        $config->set('foo.bar', 'baz');
+
+        $this->assertTrue($config->ensure('foo.bar') instanceof IConfig);
+    }
+
+    public function test_ensure_missing_key() {
+        $config = new Config();
+
+        $this->setExpectedException(MissingConfigException::class);
+        $this->assertTrue($config->ensure('foo.bar') instanceof IConfig);
     }
 }

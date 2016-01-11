@@ -11,7 +11,8 @@
 
 - [Installation](#installation)
 - [Loading configurations](#loading-configurations)
-- [Cofiguration formats](#configuration-formats)
+- [Accessing configurations](#accessing-configurations)
+- [Configuration formats](#configuration-formats)
 - [References](#references)
 - [Environments](#environments)
     - [Setting an environment](#setting-an-environment)
@@ -33,6 +34,29 @@ The config loader is responsible for loading of the configuration files. All you
 $loader = new ConfigLoader();
 $loader->addPath('path/to/my/config');
 $config = $loader->load();
+```
+
+## Accessing configurations
+
+You can easily access config values by the config key.
+
+```php
+// get config value
+$config->get('key', 'defaultValue');
+
+// set config value
+$config->set('key', 'value');
+
+// check if config is set
+$config->has('key');
+
+// remove config value
+$config->remove('key');
+
+// check if config is set, throws MissingConfigException
+$config
+    ->ensure('key', 'errorMessage')
+    ->ensure('anotherKey', 'errorMessage');
 ```
 
 ## Configuration formats

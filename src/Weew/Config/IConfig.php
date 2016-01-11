@@ -50,4 +50,12 @@ interface IConfig extends IArrayable {
      * @param IConfig $config
      */
     function extend(IConfig $config);
+
+    /**
+     * @param $key
+     * @param null $errorMessage
+     *
+     * @return IConfig
+     */
+    function ensure($key, $errorMessage = null);
 }

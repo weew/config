@@ -2,6 +2,8 @@
 
 namespace Weew\Config;
 
+use Weew\Config\Exceptions\MissingConfigException;
+
 class Config implements IConfig {
     /**
      * @var array
@@ -89,6 +91,25 @@ class Config implements IConfig {
      */
     public function extend(IConfig $config) {
         $this->merge($config->getConfig());
+    }
+
+    /**
+     * @param $key
+     * @param null $errorMessage
+     *
+     * @return IConfig
+     * @throws MissingConfigException
+     */
+    public function ensure($key, $errorMessage = null) {
+        if ( ! $this->has($key)) {
+            if ($errorMessage === null) {
+                $errorMessage = sprintf('Missing config at key "%s".', $key);
+            }
+
+            throw new MissingConfigException($errorMessage);
+        }
+
+        return $this;
     }
 
     /**
