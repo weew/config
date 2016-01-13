@@ -104,6 +104,8 @@ class Config implements IConfig {
         if ( ! $this->has($key)) {
             if ($errorMessage === null) {
                 $errorMessage = sprintf('Missing config at key "%s".', $key);
+            } else {
+                $errorMessage = s('%s: %s', $key, $errorMessage);
             }
 
             throw new MissingConfigException($errorMessage);

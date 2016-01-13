@@ -113,4 +113,11 @@ class ConfigTest extends PHPUnit_Framework_TestCase {
         $this->setExpectedException(MissingConfigException::class);
         $this->assertTrue($config->ensure('foo.bar') instanceof IConfig);
     }
+
+    public function test_ensure_missing_key_with_custom_message() {
+        $config = new Config();
+
+        $this->setExpectedException(MissingConfigException::class);
+        $this->assertTrue($config->ensure('foo.bar', 'foo') instanceof IConfig);
+    }
 }
