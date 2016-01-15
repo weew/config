@@ -120,4 +120,28 @@ class ConfigTest extends PHPUnit_Framework_TestCase {
         $this->setExpectedException(MissingConfigException::class);
         $this->assertTrue($config->ensure('foo.bar', 'foo') instanceof IConfig);
     }
+
+    public function test_walks_over_arrays() {
+        $config = new Config([
+            'bar' => 'b',
+            'baz' => 'z',
+            'foo' => [
+                '{bar} {baz}',
+                ['{baz} {bar}']
+            ],
+            'yolo' => [
+                'foo' => '{bar}',
+            ],
+        ]);
+
+        $this->assertEquals(
+            ['foo' => 'b'],
+            $config->get('yolo')
+        );
+
+        $this->assertEquals(
+            ['b z', ['z b']],
+            $config->get('foo')
+        );
+    }
 }
