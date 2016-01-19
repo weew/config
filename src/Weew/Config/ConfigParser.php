@@ -20,6 +20,32 @@ class ConfigParser implements IConfigParser {
     }
 
     /**
+     * @param $value
+     *
+     * @return bool
+     */
+    public function isReference($value) {
+        if (is_string($value)) {
+            return preg_match($this->getReferenceRegexPattern(), $value) === 1;
+        }
+
+        return false;
+    }
+
+    /**
+     * @param $value
+     *
+     * @return null|string
+     */
+    public function parseReferencePath($value) {
+        if (preg_match($this->getReferenceRegexPattern(), $value, $matches) === 1) {
+            return $matches[1];
+        }
+
+        return null;
+    }
+
+    /**
      * @param IConfig $config
      * @param array $array
      *
@@ -40,10 +66,10 @@ class ConfigParser implements IConfigParser {
      * @return mixed
      */
     protected function parseString(IConfig $config, $string) {
-        if (preg_match('#^\{([^\}]+)\}$#', $string, $matches) === 1) {
-            return $config->get($matches[1]);
+        if ($this->isReference($string)) {
+            return $config->get($this->parseReferencePath($string));
         } else {
-            $string = preg_replace_callback('#\{([^\}]+)\}#', function($matches) use ($config) {
+            $string = preg_replace_callback($this->getInterpolationRegexPattern(), function($matches) use ($config) {
                 return $config->get($matches[1]);
             }, $string);
 
@@ -59,5 +85,19 @@ class ConfigParser implements IConfigParser {
      */
     protected function parseAbstract(IConfig $config, $abstract) {
         return $abstract;
+    }
+
+    /**
+     * @return string
+     */
+    protected function getReferenceRegexPattern() {
+        return '#^\{([^\}]+)\}$#';
+    }
+
+    /**
+     * @return string
+     */
+    protected function getInterpolationRegexPattern() {
+        return '#\{([^\}]+)\}#';
     }
 }

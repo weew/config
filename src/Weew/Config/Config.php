@@ -49,6 +49,8 @@ class Config implements IConfig {
      * @return mixed
      */
     public function get($key, $default = null) {
+        $key = $this->getAbsoluteConfigKey($key);
+
         return $this->getConfigParser()
             ->parse($this, array_get($this->config, $key, $default));
     }
@@ -58,6 +60,8 @@ class Config implements IConfig {
      * @param $value
      */
     public function set($key, $value) {
+        $key = $this->getAbsoluteConfigKey($key);
+
         array_set($this->config, $key, $value);
     }
 
@@ -67,6 +71,8 @@ class Config implements IConfig {
      * @return bool
      */
     public function has($key) {
+        $key = $this->getAbsoluteConfigKey($key);
+
         return array_has($this->config, $key);
     }
 
@@ -74,6 +80,8 @@ class Config implements IConfig {
      * @param $key
      */
     public function remove($key) {
+        $key = $this->getAbsoluteConfigKey($key);
+
         array_remove($this->config, $key);
     }
 
@@ -141,5 +149,35 @@ class Config implements IConfig {
      */
     public function setConfigParser(IConfigParser $parser) {
         $this->parser = $parser;
+    }
+
+    /**
+     * @param $key
+     *
+     * @return string
+     */
+    public function getAbsoluteConfigKey($key) {
+        $prefix = null;
+        $parser = $this->getConfigParser();
+        $steps = explode('.', $key);
+        $config = $this->config;
+
+        foreach ($steps as $step) {
+            if ( ! is_array($config)) {
+                break;
+            }
+
+            array_shift($steps);
+            $config = array_get($config, $step);
+
+            if ($parser->isReference($config)) {
+                array_unshift($steps, $parser->parseReferencePath($config));
+                $config = implode('.', $steps);
+
+                return $this->getAbsoluteConfigKey($config);
+            }
+        }
+
+        return $key;
     }
 }

@@ -10,4 +10,18 @@ interface IConfigParser {
      * @return mixed
      */
     function parse(IConfig $config, $value);
+
+    /**
+     * @param $value
+     *
+     * @return bool
+     */
+    function isReference($value);
+
+    /**
+     * @param $value
+     *
+     * @return string
+     */
+    function parseReferencePath($value);
 }

@@ -114,8 +114,30 @@ return [
 
 // config2
 return [
-    'reference' => '{list.foo}'
+    'reference' => 'foo {list.foo}'
 ];
+
+// returns 'foo bar'
+$config->get('reference');
+```
+
+You can even reference whole config blocks.
+
+```php
+// config1
+return [
+    'list' => [
+        'foo' => 'bar'
+    ]
+];
+
+// config2
+return [
+    'reference' => '{list}'
+];
+
+// returns ['foo' => 'bar']
+$config->get('reference');
 ```
 
 Now when you access the `reference` value you will get "bar" in return. Keep in mind that references are interpolated at access time (when you call $config->get()). This means that if you change a config value, everyone who references it will receive it's updated value and not the old one.

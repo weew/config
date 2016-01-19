@@ -58,4 +58,11 @@ interface IConfig extends IArrayable {
      * @return IConfig
      */
     function ensure($key, $errorMessage = null);
+
+    /**
+     * @param $key
+     *
+     * @return string
+     */
+    function getAbsoluteConfigKey($key);
 }

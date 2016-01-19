@@ -144,4 +144,62 @@ class ConfigTest extends PHPUnit_Framework_TestCase {
             $config->get('foo')
         );
     }
+
+    public function test_get_absolute_config_key() {
+        $config = new Config();
+        $config->set('foo', '{bar.baz}');
+        $config->set('bar', ['baz' => '{yolo.swag}']);
+        $config->set('yolo.swag', ['key' => 'value']);
+
+        $this->assertEquals(
+            'yolo.swag.key', $config->getAbsoluteConfigKey('foo.key')
+        );
+    }
+
+    public function test_get_with_reference() {
+        $config = new Config();
+        $config->set('foo', '{bar.baz}');
+        $config->set('bar', ['baz' => '{yolo.swag}']);
+        $config->set('yolo.swag', ['key' => 'value']);
+
+        $this->assertEquals(['key' => 'value'], $config->get('foo'));
+        $this->assertEquals('value', $config->get('foo.key'));
+    }
+
+    public function test_set_with_reference() {
+        $config = new Config();
+        $config->set('foo', '{bar.baz}');
+        $config->set('bar', ['baz' => '{yolo.swag}']);
+        $config->set('yolo.swag', ['key' => 'value']);
+
+        $config->set('foo.key', 'secret');
+
+        $this->assertEquals('secret', $config->get('foo.key'));
+        $this->assertEquals('secret', $config->get('bar.baz.key'));
+        $this->assertEquals('secret', $config->get('yolo.swag.key'));
+    }
+
+    public function test_has_with_reference() {
+        $config = new Config();
+        $config->set('foo', '{bar.baz}');
+        $config->set('bar', ['baz' => '{yolo.swag}']);
+        $config->set('yolo.swag', ['key' => 'value']);
+
+        $this->assertTrue($config->has('foo.key'));
+        $this->assertTrue($config->has('bar.baz.key'));
+        $this->assertTrue($config->has('yolo.swag.key'));
+    }
+
+    public function test_remove_with_reference() {
+        $config = new Config();
+        $config->set('foo', '{bar.baz}');
+        $config->set('bar', ['baz' => '{yolo.swag}']);
+        $config->set('yolo.swag', ['key' => 'value']);
+
+        $config->remove('foo.key');
+
+        $this->assertFalse($config->has('foo.key'));
+        $this->assertFalse($config->has('bar.baz.key'));
+        $this->assertFalse($config->has('yolo.swag.key'));
+    }
 }

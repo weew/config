@@ -64,4 +64,17 @@ class ConfigParserTest extends PHPUnit_Framework_TestCase {
             ])
         );
     }
+
+    public function test_is_reference() {
+        $parser = new ConfigParser();
+        $this->assertEquals('foo.bar', $parser->parseReferencePath('{foo.bar}'));
+        $this->assertNull($parser->parseReferencePath('{foo.bar'));
+    }
+
+    public function test_parse_reference_path() {
+        $parser = new ConfigParser();
+        $this->assertTrue($parser->isReference('{foo.bar}'));
+        $this->assertFalse($parser->isReference('{foo.bar'));
+        $this->assertFalse($parser->isReference('{foo.bar} {yolo.swag}'));
+    }
 }
