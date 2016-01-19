@@ -40,7 +40,7 @@ class ConfigParser implements IConfigParser {
      * @return mixed
      */
     protected function parseString(IConfig $config, $string) {
-        if (preg_match('#^\{([a-zA-Z0-9_-]+)\}$#', $string, $matches) === 1) {
+        if (preg_match('#^\{([^\}]+)\}$#', $string, $matches) === 1) {
             return $config->get($matches[1]);
         } else {
             $string = preg_replace_callback('#\{([^\}]+)\}#', function($matches) use ($config) {
