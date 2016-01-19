@@ -46,4 +46,22 @@ class ConfigParserTest extends PHPUnit_Framework_TestCase {
             ])
         );
     }
+
+    public function test_parse_blocks() {
+        $parser = new ConfigParser();
+        $config = new Config();
+        $config->set('foo', '{bar}');
+        $config->set('bar', [
+            'yolo' => 'swag',
+        ]);
+
+        $this->assertEquals(
+            ['baz' => [
+                'yolo' => 'swag'
+            ]],
+            $parser->parse($config, [
+                'baz' => '{foo}'
+            ])
+        );
+    }
 }
