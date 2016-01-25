@@ -21,7 +21,7 @@
     "require": {
         "weew/php-helpers-file": "^1.0",
         "weew/php-helpers-array": "^1.0",
-        "symfony/yaml": "^2.7",
+        "symfony/yaml": "^3.0",
         "weew/php-contracts": "^1.1"
     },
     "require-dev": {
