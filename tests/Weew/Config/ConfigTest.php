@@ -202,4 +202,12 @@ class ConfigTest extends PHPUnit_Framework_TestCase {
         $this->assertFalse($config->has('bar.baz.key'));
         $this->assertFalse($config->has('yolo.swag.key'));
     }
+
+    public function test_get_raw() {
+        $config = new Config();
+        $config->set('foo', '{bar.baz}');
+
+        $this->assertNull($config->get('foo'));
+        $this->assertEquals('{bar.baz}', $config->getRaw('foo'));
+    }
 }

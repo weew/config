@@ -57,6 +57,16 @@ class Config implements IConfig {
 
     /**
      * @param $key
+     * @param null $default
+     *
+     * @return mixed
+     */
+    public function getRaw($key, $default = null) {
+        return array_get($this->config, $key, $default);
+    }
+
+    /**
+     * @param $key
      * @param $value
      */
     public function set($key, $value) {

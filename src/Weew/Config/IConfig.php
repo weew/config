@@ -25,6 +25,14 @@ interface IConfig extends IArrayable {
 
     /**
      * @param $key
+     * @param null $default
+     *
+     * @return mixed
+     */
+    function getRaw($key, $default = null);
+
+    /**
+     * @param $key
      * @param $value
      */
     function set($key, $value);
