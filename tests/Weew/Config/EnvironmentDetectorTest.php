@@ -11,6 +11,7 @@ class EnvironmentDetectorTest extends PHPUnit_Framework_TestCase {
 
         $this->assertEquals('prod', $detector->detectEnvironment('prod'));
         $this->assertEquals('prod', $detector->detectEnvironment('_prod'));
+        $this->assertEquals('prod', $detector->detectEnvironment('_prod_'));
         $this->assertEquals('prod', $detector->detectEnvironment('_prod.php'));
         $this->assertEquals('prod', $detector->detectEnvironment('foo_prod'));
         $this->assertEquals('prod', $detector->detectEnvironment('foo_prod.php'));
@@ -20,6 +21,7 @@ class EnvironmentDetectorTest extends PHPUnit_Framework_TestCase {
 
         $this->assertEquals('prod', $detector->detectEnvironment('production'));
         $this->assertEquals('prod', $detector->detectEnvironment('_production'));
+        $this->assertEquals('prod', $detector->detectEnvironment('_production_'));
         $this->assertEquals('prod', $detector->detectEnvironment('_production.php'));
         $this->assertEquals('prod', $detector->detectEnvironment('foo_production'));
         $this->assertEquals('prod', $detector->detectEnvironment('foo_production.php'));
@@ -29,6 +31,7 @@ class EnvironmentDetectorTest extends PHPUnit_Framework_TestCase {
 
         $this->assertEquals('dev', $detector->detectEnvironment('dev'));
         $this->assertEquals('dev', $detector->detectEnvironment('_dev'));
+        $this->assertEquals('dev', $detector->detectEnvironment('_dev_'));
         $this->assertEquals('dev', $detector->detectEnvironment('_dev.php'));
         $this->assertEquals('dev', $detector->detectEnvironment('foo_dev'));
         $this->assertEquals('dev', $detector->detectEnvironment('foo_dev.php'));
@@ -38,6 +41,7 @@ class EnvironmentDetectorTest extends PHPUnit_Framework_TestCase {
 
         $this->assertEquals('dev', $detector->detectEnvironment('development'));
         $this->assertEquals('dev', $detector->detectEnvironment('_development'));
+        $this->assertEquals('dev', $detector->detectEnvironment('_development_'));
         $this->assertEquals('dev', $detector->detectEnvironment('_development.php'));
         $this->assertEquals('dev', $detector->detectEnvironment('foo_development'));
         $this->assertEquals('dev', $detector->detectEnvironment('foo_development.php'));
@@ -47,6 +51,7 @@ class EnvironmentDetectorTest extends PHPUnit_Framework_TestCase {
 
         $this->assertEquals('test', $detector->detectEnvironment('test'));
         $this->assertEquals('test', $detector->detectEnvironment('_test'));
+        $this->assertEquals('test', $detector->detectEnvironment('_test_'));
         $this->assertEquals('test', $detector->detectEnvironment('_test.php'));
         $this->assertEquals('test', $detector->detectEnvironment('foo_test'));
         $this->assertEquals('test', $detector->detectEnvironment('foo_test.php'));
@@ -55,6 +60,12 @@ class EnvironmentDetectorTest extends PHPUnit_Framework_TestCase {
         $this->assertNull($detector->detectEnvironment('_testfoo'));
 
         $this->assertNull($detector->detectEnvironment('foo/bar'));
+
+        $this->assertNull($detector->detectEnvironment('dev_dist'));
+        $this->assertNull($detector->detectEnvironment('dev_dist.dev'));
+        $this->assertNull($detector->detectEnvironment('dev_dist_dev'));
+        $this->assertNull($detector->detectEnvironment('dist'));
+        $this->assertNull($detector->detectEnvironment('dev.dist'));
     }
 
     public function test_add_rule() {
@@ -64,7 +75,7 @@ class EnvironmentDetectorTest extends PHPUnit_Framework_TestCase {
         $this->assertNull($detector->detectEnvironment('_bar.php'));
         $this->assertNull($detector->detectEnvironment('foo_bar.php'));
 
-        $detector->addRule('bar', ['bar']);
+        $detector->addEnvironmentRule('bar', ['bar']);
 
         $this->assertEquals('bar', $detector->detectEnvironment('bar'));
         $this->assertEquals('bar', $detector->detectEnvironment('foo_bar'));

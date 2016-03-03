@@ -14,5 +14,11 @@ interface IEnvironmentDetector {
      * @param $name
      * @param array $abbreviations
      */
-    function addRule($name, array $abbreviations);
+    function addEnvironmentRule($name, array $abbreviations = []);
+
+    /**
+     * @param $name
+     * @param array $abbreviations
+     */
+    function addIgnoreRule($name, array $abbreviations = []);
 }

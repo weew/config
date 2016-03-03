@@ -17,6 +17,7 @@
     - [Setting an environment](#setting-an-environment)
     - [How it works](#how-it-works)
     - [Adding custom environments](#adding-custom-environments)
+    - [Ignoring files](#ignoring-files)
 - [Extending](#extending)
     - [Custom config drivers](#custom-config-drivers)
     - [Custom environment detector](#custom-environment-detector)
@@ -178,7 +179,7 @@ To create your own environments you'll have to register a new rule on the enviro
 
 ```php
 $loader->getEnvironmentDetector()
-    ->addRule('integ', ['integ', 'integration', 'stage']);
+    ->addEnvironmentRule('integ', ['integ', 'integration', 'stage']);
 ```
 
 Below is a list of some files and directories that would match the integration environment:
@@ -186,6 +187,7 @@ Below is a list of some files and directories that would match the integration e
 ```
 - stage
 - _stage
+- _stage_
 - foo_stage
 - _stage.txt
 - foo_stage.txt
@@ -199,6 +201,34 @@ This files will not match:
 - foo_stage_bar
 - _stagebar
 ```
+
+### Ignoring files
+
+This files are ignored by default:
+
+```
+- dist
+- _dist
+- _dist_
+- foo_dist
+- _dist.txt
+- foo_dist.txt
+
+- ignore
+- _ignore
+- _ignore_
+- foo_ignore
+- _ignore.txt
+- foo_ignore.txt
+```
+
+You may specify custom rules to ignore certain files:
+
+ ```php
+ $loader->getEnvironmentDetector()
+     ->addIgnoreRule('sample', ['dist', 'ignore', 'sample']);
+ ```
+
 
 ## Extending
 

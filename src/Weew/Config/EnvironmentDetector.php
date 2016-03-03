@@ -6,10 +6,19 @@ class EnvironmentDetector implements IEnvironmentDetector {
     /**
      * @var array
      */
-    protected $rules = [];
+    protected $environmentRules = [];
 
+    /**
+     * @var array
+     */
+    protected $ignoreRules = [];
+
+    /**
+     * EnvironmentDetector constructor.
+     */
     public function __construct() {
-        $this->addDefaultRules();
+        $this->addDefaultEnvironmentRules();
+        $this->addDefaultIgnoreRules();
     }
 
     /**
@@ -18,7 +27,76 @@ class EnvironmentDetector implements IEnvironmentDetector {
      * @return null|string
      */
     public function detectEnvironment($string) {
-        foreach ($this->rules as $name => $patterns) {
+        if ($this->matchIgnoreRules($string)) {
+            return null;
+        }
+
+        if ($env = $this->matchEnvironmentRules($string)) {
+            return $env;
+        }
+
+        return null;
+    }
+
+    /**
+     * @param $name
+     * @param array $abbreviations
+     */
+    public function addEnvironmentRule($name, array $abbreviations = []) {
+        $this->environmentRules = $this->addRule($this->environmentRules, $name, $abbreviations);
+    }
+
+    /**
+     * @param $name
+     * @param array $abbreviations
+     */
+    public function addIgnoreRule($name, array $abbreviations = []) {
+        $this->ignoreRules = $this->addRule($this->ignoreRules, $name, $abbreviations);
+    }
+
+    /**
+     * @param array $rules
+     * @param $name
+     * @param array $abbreviations
+     *
+     * @return array
+     */
+    protected function addRule(array $rules, $name, array $abbreviations) {
+        if (array_get($rules, $name) === null) {
+            $rules[$name] = [];
+        }
+
+        $patterns = $this->createPatternsForStrings($abbreviations);
+
+        foreach ($patterns as $pattern) {
+            $rules[$name][] = $pattern;
+        }
+
+        return $rules;
+    }
+
+    /**
+     * @param $string
+     *
+     * @return null|string
+     */
+    protected function matchEnvironmentRules($string) {
+        return $this->matchRules($this->environmentRules, $string);
+    }
+
+    /**
+     * @param $string
+     *
+     * @return bool
+     */
+    protected function matchIgnoreRules($string) {
+        $match = $this->matchRules($this->ignoreRules, $string);
+
+        return !! $match;
+    }
+
+    private function matchRules(array $rules, $string) {
+        foreach ($rules as $name => $patterns) {
             foreach ($patterns as $pattern) {
                 if (preg_match($pattern, $string) === 1) {
                     return $name;
@@ -30,28 +108,19 @@ class EnvironmentDetector implements IEnvironmentDetector {
     }
 
     /**
-     * @param $name
-     * @param array $abbreviations
+     * Register default environment rules.
      */
-    public function addRule($name, array $abbreviations) {
-        if (array_get($this->rules, $name) === null) {
-            $this->rules[$name] = [];
-        }
-
-        $patterns = $this->createPatternsForStrings($abbreviations);
-
-        foreach ($patterns as $pattern) {
-            $this->rules[$name][] = $pattern;
-        }
+    protected function addDefaultEnvironmentRules() {
+        $this->addEnvironmentRule('prod', ['prod', 'production']);
+        $this->addEnvironmentRule('dev', ['dev', 'development']);
+        $this->addEnvironmentRule('test', ['test']);
     }
 
     /**
-     * Register default environment rules.
+     * Register default ignore rules.
      */
-    protected function addDefaultRules() {
-        $this->addRule('prod', ['prod', 'production']);
-        $this->addRule('dev', ['dev', 'development']);
-        $this->addRule('test', ['test']);
+    protected function addDefaultIgnoreRules() {
+        $this->addIgnoreRule('dist', ['dist', 'ignore']);
     }
 
     /**
@@ -64,7 +133,8 @@ class EnvironmentDetector implements IEnvironmentDetector {
 
         foreach ($strings as $string) {
             $patterns[] = s('#(%s)$#', preg_quote("_$string"));
-            $patterns[] = s('#(%s)\.#', preg_quote("_$string"));
+            $patterns[] = s('#(%s)#', preg_quote(s('_%s_', $string)));
+            $patterns[] = s('#(%s)#', preg_quote("_$string."));
             $patterns[] = s('#^(%s)$#', preg_quote("$string"));
         }
 
