@@ -114,11 +114,12 @@ class Config implements IConfig {
     /**
      * @param $key
      * @param null $errorMessage
+     * @param null $scalarType
      *
      * @return IConfig
      * @throws MissingConfigException
      */
-    public function ensure($key, $errorMessage = null) {
+    public function ensure($key, $errorMessage = null, $scalarType = null) {
         if ( ! $this->has($key)) {
             if ($errorMessage === null) {
                 $errorMessage = sprintf('Missing config at key "%s".', $key);
@@ -127,6 +128,12 @@ class Config implements IConfig {
             }
 
             throw new MissingConfigException($errorMessage);
+        } if ($scalarType !== null) {
+            if ( ! str_starts_with(gettype($this->get($key)), $scalarType)) {
+                $errorMessage = sprintf('%s: Config value at key "%s" should be of type "%s".', $key, $key, $scalarType);
+
+                throw new MissingConfigException($errorMessage);
+            }
         }
 
         return $this;

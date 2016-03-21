@@ -121,6 +121,25 @@ class ConfigTest extends PHPUnit_Framework_TestCase {
         $this->assertTrue($config->ensure('foo.bar', 'foo') instanceof IConfig);
     }
 
+    public function test_ensure_with_scalar_type() {
+        $config = new Config();
+        $config->set('foo', 'bar');
+        $config->ensure('foo', 'error message', 'string');
+
+        $config->set('foo', []);
+        $config->ensure('foo', 'error message', 'array');
+
+        $config->set('foo', true);
+        $config->ensure('foo', 'error message', 'bool');
+
+        $config->set('foo', 1);
+        $config->ensure('foo', 'error message', 'int');
+
+        $config->set('foo', 'bar');
+        $this->setExpectedException(MissingConfigException::class);
+        $config->ensure('foo', 'error message', 'array');
+    }
+
     public function test_walks_over_arrays() {
         $config = new Config([
             'bar' => 'b',
