@@ -128,7 +128,9 @@ class Config implements IConfig {
             }
 
             throw new MissingConfigException($errorMessage);
-        } if ($scalarType !== null) {
+        }
+
+        if ($scalarType !== null) {
             if ( ! str_starts_with(gettype($this->get($key)), $scalarType)) {
                 $errorMessage = sprintf('%s: Config value at key "%s" should be of type "%s".', $key, $key, $scalarType);
 

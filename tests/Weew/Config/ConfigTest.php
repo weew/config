@@ -140,6 +140,14 @@ class ConfigTest extends PHPUnit_Framework_TestCase {
         $config->ensure('foo', 'error message', 'array');
     }
 
+    public function test_ensure_with_scalar_type_and_null_value() {
+        $config = new Config();
+        $config->set('foo', null);
+
+        $this->setExpectedException(MissingConfigException::class);
+        $config->ensure('foo', 'error message', 'array');
+    }
+
     public function test_walks_over_arrays() {
         $config = new Config([
             'bar' => 'b',
