@@ -54,6 +54,7 @@ $config->has('key');
 $config->remove('key');
 
 // check if config is set, throws MissingConfigException
+// optionally a type may be specified (string, int, array, etc..)
 $config
     ->ensure('key', 'errorMessage')
     ->ensure('stringNode', 'errorMessage', 'string')
