@@ -22,12 +22,17 @@ class JsonConfigDriver implements IConfigDriver {
      * @throws InvalidConfigFormatException
      */
     public function loadFile($path) {
-        $config = json_decode(file_get_contents($path), true);
+        $content = trim(file_read($path));
+        $config = [];
 
-        if ( ! is_array($config)) {;
-            throw new InvalidConfigFormatException(
-                s('JsonConfigDriver expects config at path %s to be a valid json file.', $path)
-            );
+        if ( ! empty($content)) {
+            $config = json_decode($content, true);
+
+            if ( ! is_array($config)) {;
+                throw new InvalidConfigFormatException(
+                    s('JsonConfigDriver expects config at path %s to be a valid json file.', $path)
+                );
+            }
         }
 
         return $config;

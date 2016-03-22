@@ -21,6 +21,13 @@ class YamlConfigDriver implements IConfigDriver {
      * @return array
      */
     public function loadFile($path) {
-        return Yaml::parse(file_get_contents($path));
+        $content = trim(file_read($path));
+        $config = [];
+
+        if ( ! empty($content)) {
+            $config = Yaml::parse($content);
+        }
+
+        return $config;
     }
 }
