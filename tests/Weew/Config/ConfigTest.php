@@ -4,6 +4,7 @@ namespace Tests\Weew\Config;
 
 use PHPUnit_Framework_TestCase;
 use Weew\Config\Config;
+use Weew\Config\Exceptions\InvalidConfigValueException;
 use Weew\Config\Exceptions\MissingConfigException;
 use Weew\Config\IConfig;
 
@@ -136,7 +137,7 @@ class ConfigTest extends PHPUnit_Framework_TestCase {
         $config->ensure('foo', 'error message', 'int');
 
         $config->set('foo', 'bar');
-        $this->setExpectedException(MissingConfigException::class);
+        $this->setExpectedException(InvalidConfigValueException::class);
         $config->ensure('foo', 'error message', 'array');
     }
 
@@ -144,7 +145,7 @@ class ConfigTest extends PHPUnit_Framework_TestCase {
         $config = new Config();
         $config->set('foo', null);
 
-        $this->setExpectedException(MissingConfigException::class);
+        $this->setExpectedException(InvalidConfigValueException::class);
         $config->ensure('foo', 'error message', 'array');
     }
 

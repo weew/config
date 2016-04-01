@@ -2,6 +2,7 @@
 
 namespace Weew\Config;
 
+use Weew\Config\Exceptions\InvalidConfigValueException;
 use Weew\Config\Exceptions\MissingConfigException;
 
 class Config implements IConfig {
@@ -134,7 +135,7 @@ class Config implements IConfig {
             if ( ! str_starts_with(gettype($this->get($key)), $scalarType)) {
                 $errorMessage = sprintf('%s: Config value at key "%s" should be of type "%s".', $key, $key, $scalarType);
 
-                throw new MissingConfigException($errorMessage);
+                throw new InvalidConfigValueException($errorMessage);
             }
         }
 
