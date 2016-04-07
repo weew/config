@@ -34,6 +34,8 @@ interface IConfig extends IArrayable {
     /**
      * @param $key
      * @param $value
+     *
+     * @return IConfig
      */
     function set($key, $value);
 
@@ -46,16 +48,22 @@ interface IConfig extends IArrayable {
 
     /**
      * @param $key
+     *
+     * @return IConfig
      */
     function remove($key);
 
     /**
      * @param array $config
+     *
+     * @return IConfig
      */
     function merge(array $config);
 
     /**
      * @param IConfig $config
+     *
+     * @return IConfig
      */
     function extend(IConfig $config);
 

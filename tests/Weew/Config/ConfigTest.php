@@ -238,4 +238,24 @@ class ConfigTest extends PHPUnit_Framework_TestCase {
         $this->assertNull($config->get('foo'));
         $this->assertEquals('{bar.baz}', $config->getRaw('foo'));
     }
+
+    public function test_is_chainable_trough_set() {
+        $config = new Config();
+        $this->assertTrue($config->set('foo', 'bar') === $config);
+    }
+
+    public function test_is_chainable_trough_remove() {
+        $config = new Config();
+        $this->assertTrue($config->remove('foo') === $config);
+    }
+
+    public function test_is_chainable_trough_merge() {
+        $config = new Config();
+        $this->assertTrue($config->merge([]) === $config);
+    }
+
+    public function test_is_chainable_trough_extend() {
+        $config = new Config();
+        $this->assertTrue($config->extend(new Config()) === $config);
+    }
 }

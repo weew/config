@@ -69,11 +69,15 @@ class Config implements IConfig {
     /**
      * @param $key
      * @param $value
+     *
+     * @return IConfig
      */
     public function set($key, $value) {
         $key = $this->getAbsoluteConfigKey($key);
 
         array_set($this->config, $key, $value);
+
+        return $this;
     }
 
     /**
@@ -89,27 +93,39 @@ class Config implements IConfig {
 
     /**
      * @param $key
+     *
+     * @return IConfig
      */
     public function remove($key) {
         $key = $this->getAbsoluteConfigKey($key);
 
         array_remove($this->config, $key);
+
+        return $this;
     }
 
     /**
      * @param array $config
+     *
+     * @return IConfig
      */
     public function merge(array $config) {
         $this->setConfig(
             array_extend_distinct($this->getConfig(), $config)
         );
+
+        return $this;
     }
 
     /**
      * @param IConfig $config
+     *
+     * @return IConfig
      */
     public function extend(IConfig $config) {
         $this->merge($config->getConfig());
+
+        return $this;
     }
 
     /**
@@ -118,6 +134,7 @@ class Config implements IConfig {
      * @param null $scalarType
      *
      * @return IConfig
+     * @throws InvalidConfigValueException
      * @throws MissingConfigException
      */
     public function ensure($key, $errorMessage = null, $scalarType = null) {
