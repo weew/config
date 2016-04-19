@@ -5,12 +5,19 @@ namespace Weew\Config;
 use Weew\Config\Drivers\ArrayConfigDriver;
 use Weew\Config\Drivers\IniConfigDriver;
 use Weew\Config\Drivers\YamlConfigDriver;
+use Weew\Config\Exceptions\InvalidConfigValueException;
+use Weew\Config\Exceptions\InvalidRuntimeConfigException;
 
 class ConfigLoader implements IConfigLoader {
     /**
      * @var array
      */
     protected $paths;
+
+    /**
+     * @var array
+     */
+    protected $runtimeConfigs = [];
 
     /**
      * @var IConfigDriver[]
@@ -69,13 +76,17 @@ class ConfigLoader implements IConfigLoader {
 
         $configs = [];
 
+        // load config from filesystem
         foreach ($this->getPaths() as $path) {
             $configs[] = $this->loadPath($path);
         }
 
-        $config->merge(
-            $this->processConfiguration($configs)
-        );
+        // load runtime config
+        foreach ($this->getRuntimeConfigs() as $runtimeConfig) {
+            $configs[] = $runtimeConfig;
+        }
+
+        $config->merge($this->processConfiguration($configs));
 
         return $config;
     }
@@ -122,6 +133,34 @@ class ConfigLoader implements IConfigLoader {
         foreach ($paths as $path) {
             $this->addPath($path);
         }
+    }
+
+    /**
+     * @return array
+     */
+    public function getRuntimeConfigs() {
+        return $this->runtimeConfigs;
+    }
+
+    /**
+     * @param array|IConfig $config
+     *
+     * @throws InvalidRuntimeConfigException
+     */
+    public function addRuntimeConfig($config) {
+        if ( ! $config instanceof IConfig && ! is_array($config)) {
+            throw new InvalidRuntimeConfigException(s(
+                'Runtime config must be either an array or an ' .
+                'instance of IConfig, got "%s".',
+                get_type($config)
+            ));
+        }
+
+        if ($config instanceof IConfig) {
+            $config = $config->toArray();
+        }
+
+        $this->runtimeConfigs[] = $config;
     }
 
     /**

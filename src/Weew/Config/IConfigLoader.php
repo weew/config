@@ -51,6 +51,16 @@ interface IConfigLoader {
     function addPaths(array $paths);
 
     /**
+     * @return array
+     */
+    function getRuntimeConfigs();
+
+    /**
+     * @param array|IConfig $config
+     */
+    function addRuntimeConfig($config);
+
+    /**
      * @return IConfigDriver[]
      */
     function getDrivers();

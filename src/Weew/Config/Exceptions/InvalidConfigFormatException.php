@@ -4,4 +4,4 @@ namespace Weew\Config\Exceptions;
 
 use Exception;
 
-class InvalidConfigFormatException extends Exception {}
+class InvalidConfigFormatException extends ConfigException {}

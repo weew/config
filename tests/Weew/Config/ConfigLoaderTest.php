@@ -3,8 +3,10 @@
 namespace Tests\Weew\Config;
 
 use PHPUnit_Framework_TestCase;
+use Weew\Config\Config;
 use Weew\Config\ConfigLoader;
 use Weew\Config\Drivers\ArrayConfigDriver;
+use Weew\Config\Exceptions\InvalidRuntimeConfigException;
 use Weew\Config\IConfig;
 
 class ConfigLoaderTest extends PHPUnit_Framework_TestCase {
@@ -129,6 +131,38 @@ class ConfigLoaderTest extends PHPUnit_Framework_TestCase {
 
         $this->assertEquals(
             ['list' => ['value' => 'bar']], $config->get('nested')
+        );
+    }
+
+    public function test_get_and_set_runtime_configs() {
+        $loader = new ConfigLoader();
+        $this->assertEquals([], $loader->getRuntimeConfigs());
+        $loader->addRuntimeConfig(['foo']);
+        $loader->addRuntimeConfig(new Config(['bar']));
+        $this->assertEquals([['foo'], ['bar']], $loader->getRuntimeConfigs());
+    }
+
+    public function test_invalid_runtime_config_exception_is_thrown() {
+        $loader = new ConfigLoader();
+        $this->setExpectedException(InvalidRuntimeConfigException::class);
+        $loader->addRuntimeConfig('foo');
+    }
+
+    public function test_runtime_config_is_being_loaded_at_the_end() {
+        $loader = new ConfigLoader();
+        $loader->addPath(path(__DIR__, 'configs/references'));
+        $loader->addRuntimeConfig(['list' => 'value']);
+        $config = new Config(['some' => 'value']);
+        $loader->addRuntimeConfig($config);
+        $config = $loader->load();
+
+        $this->assertEquals(
+            [
+                'nested' => ['list' => ['value' => null]],
+                'list' => 'value',
+                'some' => 'value',
+            ],
+            $config->toArray()
         );
     }
 }

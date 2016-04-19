@@ -13,6 +13,7 @@
 - [Accessing configurations](#accessing-configurations)
 - [Configuration formats](#configuration-formats)
 - [References](#references)
+- [Runtime config](#runtime-config)
 - [Environments](#environments)
     - [Setting an environment](#setting-an-environment)
     - [How it works](#how-it-works)
@@ -145,9 +146,21 @@ $config->get('reference');
 
 Now when you access the `reference` value you will get "bar" in return. Keep in mind that references are interpolated at access time (when you call $config->get()). This means that if you change a config value, everyone who references it will receive it's updated value and not the old one.
 
+## Runtime config
+
+Sometimes you might want to apply runtime config from an array or similar that also has a higher priority as the config loaded from the filesystem.
+
+```php
+$loader->addRuntimeConfig(['my' => 'config']);
+
+// or
+
+$loader->addRunetimeConfig(new Config(['my' => 'config']));
+```
+
 ## Environments
 
-Often you want to split your configurations in multiple files or directories and load them depending on your current environment. This can be achieved trought the environment settings.
+Often you want to split your configurations in multiple files or directories and load them depending on your current environment. This can be achieved trough the environment settings.
 
 ### Setting an environment
 
