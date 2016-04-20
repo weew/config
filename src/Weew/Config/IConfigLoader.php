@@ -42,11 +42,15 @@ interface IConfigLoader {
 
     /**
      * @param $path
+     *
+     * @return IConfigLoader
      */
     function addPath($path);
 
     /**
      * @param array $paths
+     *
+     * @return IConfigLoader
      */
     function addPaths(array $paths);
 
@@ -57,6 +61,8 @@ interface IConfigLoader {
 
     /**
      * @param array|IConfig $config
+     *
+     * @return IConfigLoader
      */
     function addRuntimeConfig($config);
 
@@ -65,6 +71,8 @@ interface IConfigLoader {
      * new one, based on a config array, IConfig or a config path.
      *
      * @param array|string|IConfig $config
+     *
+     * @return IConfigLoader
      */
     function addConfig($config);
 

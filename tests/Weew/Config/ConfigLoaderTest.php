@@ -192,4 +192,12 @@ class ConfigLoaderTest extends PHPUnit_Framework_TestCase {
             'some' => 'config',
         ], $config->toArray());
     }
+
+    public function test_chainability() {
+        $loader = new ConfigLoader();
+        $this->assertTrue($loader->addPath('') === $loader);
+        $this->assertTrue($loader->addPaths([]) === $loader);
+        $this->assertTrue($loader->addRuntimeConfig([]) === $loader);
+        $this->assertTrue($loader->addConfig([]) === $loader);
+    }
 }

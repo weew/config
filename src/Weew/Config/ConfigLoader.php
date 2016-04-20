@@ -121,18 +121,26 @@ class ConfigLoader implements IConfigLoader {
 
     /**
      * @param $path
+     *
+     * @return IConfigLoader
      */
     public function addPath($path) {
         $this->paths[] = $path;
+
+        return $this;
     }
 
     /**
      * @param array $paths
+     *
+     * @return IConfigLoader
      */
     public function addPaths(array $paths) {
         foreach ($paths as $path) {
             $this->addPath($path);
         }
+
+        return $this;
     }
 
     /**
@@ -146,6 +154,8 @@ class ConfigLoader implements IConfigLoader {
      * @param array|IConfig $config
      *
      * @throws InvalidRuntimeConfigException
+     *
+     * @return IConfigLoader
      */
     public function addRuntimeConfig($config) {
         if ( ! $config instanceof IConfig && ! is_array($config)) {
@@ -161,12 +171,16 @@ class ConfigLoader implements IConfigLoader {
         }
 
         $this->runtimeConfigs[] = $config;
+
+        return $this;
     }
 
     /**
      * @param array|string|IConfig $config
      *
      * @throws InvalidRuntimeConfigException
+     *
+     * @return IConfigLoader
      */
     public function addConfig($config) {
         if (is_array($config)) {
@@ -187,6 +201,8 @@ class ConfigLoader implements IConfigLoader {
         else if ($config instanceof IConfig) {
             $this->addRuntimeConfig($config);
         }
+
+        return $this;
     }
 
     /**
