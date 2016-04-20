@@ -165,4 +165,31 @@ class ConfigLoaderTest extends PHPUnit_Framework_TestCase {
             $config->toArray()
         );
     }
+
+    public function test_add_config() {
+        $loader = new ConfigLoader();
+        $loader->addConfig(path(__DIR__, 'configs/config.ini'));
+        $loader->addConfig([path(__DIR__, 'configs/references')]);
+        $loader->addConfig(['key' => 'value']);
+        $loader->addConfig(new Config(['some' => 'config']));
+        $config = $loader->load();
+
+        $this->assertEquals([
+            'foo' => 'bar',
+            'bar' => 'foo',
+            'section' => [
+                'yolo' => 2,
+            ],
+            'list' => [
+                'foo' => 'bar',
+            ],
+            'nested' => [
+                'list' => [
+                    'value' => 'bar',
+                ],
+            ],
+            'key' => 'value',
+            'some' => 'config',
+        ], $config->toArray());
+    }
 }

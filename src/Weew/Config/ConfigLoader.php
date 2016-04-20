@@ -164,6 +164,32 @@ class ConfigLoader implements IConfigLoader {
     }
 
     /**
+     * @param array|string|IConfig $config
+     *
+     * @throws InvalidRuntimeConfigException
+     */
+    public function addConfig($config) {
+        if (is_array($config)) {
+            // array of paths to config files
+            if (array_is_indexed($config)) {
+                $this->addPaths($config);
+            }
+            // array of key value configs
+            else {
+                $this->addRuntimeConfig($config);
+            }
+        }
+        // path to config file
+        else if (is_string($config)) {
+            $this->addPath($config);
+        }
+        // config object
+        else if ($config instanceof IConfig) {
+            $this->addRuntimeConfig($config);
+        }
+    }
+
+    /**
      * @return IConfigDriver[]
      */
     public function getDrivers() {

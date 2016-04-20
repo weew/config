@@ -61,6 +61,14 @@ interface IConfigLoader {
     function addRuntimeConfig($config);
 
     /**
+     * Add a config source or extend currently loaded config with
+     * new one, based on a config array, IConfig or a config path.
+     *
+     * @param array|string|IConfig $config
+     */
+    function addConfig($config);
+
+    /**
      * @return IConfigDriver[]
      */
     function getDrivers();
