@@ -216,6 +216,7 @@ This files will not match:
 - foo_stage_bar
 - _stagebar
 ```
+As delimiter you can use any of this characters: `._+:-`.
 
 ### Ignoring files
 

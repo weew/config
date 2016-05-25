@@ -28,7 +28,7 @@ class EnvironmentDetector implements IEnvironmentDetector {
      */
     public function detectEnvironment($string) {
         if ($this->matchIgnoreRules($string)) {
-            return null;
+            return false;
         }
 
         if ($env = $this->matchEnvironmentRules($string)) {
@@ -132,10 +132,16 @@ class EnvironmentDetector implements IEnvironmentDetector {
         $patterns = [];
 
         foreach ($strings as $string) {
-            $patterns[] = s('#(%s)$#', preg_quote("_$string"));
-            $patterns[] = s('#(%s)#', preg_quote(s('_%s_', $string)));
-            $patterns[] = s('#(%s)#', preg_quote("_$string."));
-            $patterns[] = s('#^(%s)$#', preg_quote("$string"));
+            $string = preg_quote($string);
+
+            // dist
+            $patterns[] = s('#^(%s)$#', $string);
+            // dist.
+            $patterns[] = s('#^(%s)[._+:-]+#', $string);
+            // .dist
+            $patterns[] = s('#[._+:-]+(%s)$#', $string);
+            // .dist.
+            $patterns[] = s('#[._+:-]+(%s)[._+:-]+#', $string);
         }
 
         return $patterns;

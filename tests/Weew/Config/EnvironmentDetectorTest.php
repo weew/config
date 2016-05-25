@@ -61,11 +61,32 @@ class EnvironmentDetectorTest extends PHPUnit_Framework_TestCase {
 
         $this->assertNull($detector->detectEnvironment('foo/bar'));
 
-        $this->assertNull($detector->detectEnvironment('dev_dist'));
-        $this->assertNull($detector->detectEnvironment('dev_dist.dev'));
-        $this->assertNull($detector->detectEnvironment('dev_dist_dev'));
-        $this->assertNull($detector->detectEnvironment('dist'));
-        $this->assertNull($detector->detectEnvironment('dev.dist'));
+        $this->assertFalse($detector->detectEnvironment('dist.'));
+        $this->assertFalse($detector->detectEnvironment('dist_'));
+        $this->assertFalse($detector->detectEnvironment('dist-'));
+
+        $this->assertFalse($detector->detectEnvironment('.dist'));
+        $this->assertFalse($detector->detectEnvironment('_dist'));
+        $this->assertFalse($detector->detectEnvironment('-dist'));
+
+        $this->assertFalse($detector->detectEnvironment('dist.foo'));
+        $this->assertFalse($detector->detectEnvironment('dist_foo'));
+        $this->assertFalse($detector->detectEnvironment('dist-foo'));
+
+        $this->assertFalse($detector->detectEnvironment('foo.dist'));
+        $this->assertFalse($detector->detectEnvironment('foo_dist'));
+        $this->assertFalse($detector->detectEnvironment('foo-dist'));
+
+        $this->assertFalse($detector->detectEnvironment('foo.dist.bar'));
+        $this->assertFalse($detector->detectEnvironment('foo_dist_bar'));
+        $this->assertFalse($detector->detectEnvironment('foo-dist-bar'));
+
+        $this->assertFalse($detector->detectEnvironment('foo-dist.bar'));
+        $this->assertFalse($detector->detectEnvironment('foo_dist-bar'));
+        $this->assertFalse($detector->detectEnvironment('foo.dist:bar'));
+        $this->assertFalse($detector->detectEnvironment('foo+dist:bar'));
+
+        $this->assertFalse($detector->detectEnvironment('dist'));
     }
 
     public function test_add_rule() {
@@ -78,8 +99,23 @@ class EnvironmentDetectorTest extends PHPUnit_Framework_TestCase {
         $detector->addEnvironmentRule('bar', ['bar']);
 
         $this->assertEquals('bar', $detector->detectEnvironment('bar'));
+
+        $this->assertEquals('bar', $detector->detectEnvironment('foo.bar'));
         $this->assertEquals('bar', $detector->detectEnvironment('foo_bar'));
-        $this->assertEquals('bar', $detector->detectEnvironment('_bar.php'));
-        $this->assertEquals('bar', $detector->detectEnvironment('foo_bar.php'));
+        $this->assertEquals('bar', $detector->detectEnvironment('foo-bar'));
+        $this->assertEquals('bar', $detector->detectEnvironment('foo+bar'));
+        $this->assertEquals('bar', $detector->detectEnvironment('foo:bar'));
+
+        $this->assertEquals('bar', $detector->detectEnvironment('bar.foo'));
+        $this->assertEquals('bar', $detector->detectEnvironment('bar_foo'));
+        $this->assertEquals('bar', $detector->detectEnvironment('bar-foo'));
+        $this->assertEquals('bar', $detector->detectEnvironment('bar+foo'));
+        $this->assertEquals('bar', $detector->detectEnvironment('bar:foo'));
+
+        $this->assertEquals('bar', $detector->detectEnvironment('foo_bar.foo'));
+        $this->assertEquals('bar', $detector->detectEnvironment('foo-bar_foo'));
+        $this->assertEquals('bar', $detector->detectEnvironment('foo+bar-foo'));
+        $this->assertEquals('bar', $detector->detectEnvironment('foo:bar+foo'));
+        $this->assertEquals('bar', $detector->detectEnvironment('foo_bar:foo'));
     }
 }
