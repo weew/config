@@ -52,11 +52,16 @@ class ConfigParser implements IConfigParser {
      * @return array
      */
     protected function parseArray(IConfig $config, array $array) {
+        $parsedArray = [];
+
         foreach ($array as $key => $value) {
-            $array[$key] = $this->parse($config, $value);
+            $key = $this->parse($config, $key);
+            $value = $this->parse($config, $value);
+
+            $parsedArray[$key] = $value;
         }
 
-        return $array;
+        return $parsedArray;
     }
 
     /**
@@ -67,14 +72,20 @@ class ConfigParser implements IConfigParser {
      */
     protected function parseString(IConfig $config, $string) {
         if ($this->isReference($string)) {
-            return $config->get($this->parseReferencePath($string));
+            $value = $config->get($this->parseReferencePath($string));
         } else {
-            $string = preg_replace_callback($this->getInterpolationRegexPattern(), function($matches) use ($config) {
-                return $config->get($matches[1]);
-            }, $string);
+            $value = preg_replace_callback($this->getInterpolationRegexPattern(), function($matches) use ($config) {
+                $value = $config->get($matches[1]);
 
-            return $string;
+                if ( ! is_scalar($value)) {
+                    return $matches[0];
+                }
+
+                return $value;
+            }, $string);
         }
+
+        return $value;
     }
 
     /**

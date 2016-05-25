@@ -56,12 +56,18 @@ class ConfigParserTest extends PHPUnit_Framework_TestCase {
         ]);
 
         $this->assertEquals(
-            ['baz' => [
-                'yolo' => 'swag'
-            ]],
-            $parser->parse($config, [
-                'baz' => '{foo}'
-            ])
+            ['baz' => ['yolo' => 'swag']],
+            $parser->parse($config, ['baz' => '{foo}'])
+        );
+
+        $this->assertEquals(
+            ['baz.swag' => ['yolo' => 'swag']],
+            $parser->parse($config, ['baz.{foo.yolo}' => '{foo}'])
+        );
+
+        $this->assertEquals(
+            ['baz.{foo}' => ['yolo' => 'swag']],
+            $parser->parse($config, ['baz.{foo}' => '{foo}'])
         );
     }
 
