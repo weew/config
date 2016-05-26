@@ -200,4 +200,17 @@ class ConfigLoaderTest extends PHPUnit_Framework_TestCase {
         $this->assertTrue($loader->addRuntimeConfig([]) === $loader);
         $this->assertTrue($loader->addConfig([]) === $loader);
     }
+
+    public function test_add_environment() {
+        $loader = new ConfigLoader();
+        $this->assertEquals($loader, $loader->addEnvironment('foo'));
+        $this->assertEquals('foo', $loader->getEnvironmentDetector()->detectEnvironment('foo_bar'));
+    }
+
+    public function test_add_environments() {
+        $loader = new ConfigLoader();
+        $this->assertEquals($loader, $loader->addEnvironments(['baz', 'bar']));
+        $this->assertEquals('bar', $loader->getEnvironmentDetector()->detectEnvironment('foo_bar'));
+        $this->assertEquals('baz', $loader->getEnvironmentDetector()->detectEnvironment('foo_baz'));
+    }
 }

@@ -21,6 +21,20 @@ interface IConfigLoader {
     function setEnvironment($environment);
 
     /**
+     * @param string $name
+     *
+     * @return IConfigLoader
+     */
+    function addEnvironment($name);
+
+    /**
+     * @param array $names
+     *
+     * @return IConfigLoader
+     */
+    function addEnvironments(array $names);
+
+    /**
      * @return IEnvironmentDetector
      */
     function getEnvironmentDetector();

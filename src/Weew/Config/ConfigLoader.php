@@ -106,6 +106,32 @@ class ConfigLoader implements IConfigLoader {
     }
 
     /**
+     * @param string $name
+     *
+     * @return IConfigLoader
+     */
+    public function addEnvironment($name) {
+        $this->getEnvironmentDetector()
+            ->addEnvironmentRule($name, [$name]);
+
+        return $this;
+    }
+
+    /**
+     * @param array $names
+     *
+     * @return IConfigLoader
+     */
+    public function addEnvironments(array $names) {
+        foreach ($names as $name) {
+            $this->getEnvironmentDetector()
+                ->addEnvironmentRule($name, [$name]);
+        }
+
+        return $this;
+    }
+
+    /**
      * @return array
      */
     public function getPaths() {
