@@ -112,6 +112,7 @@ class EnvironmentDetector implements IEnvironmentDetector {
      */
     protected function addDefaultEnvironmentRules() {
         $this->addEnvironmentRule('prod', ['prod', 'production']);
+        $this->addEnvironmentRule('stage', ['stage']);
         $this->addEnvironmentRule('dev', ['dev', 'development']);
         $this->addEnvironmentRule('test', ['test']);
     }

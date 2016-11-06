@@ -59,6 +59,16 @@ class EnvironmentDetectorTest extends PHPUnit_Framework_TestCase {
         $this->assertNull($detector->detectEnvironment('footest'));
         $this->assertNull($detector->detectEnvironment('_testfoo'));
 
+        $this->assertEquals('stage', $detector->detectEnvironment('stage'));
+        $this->assertEquals('stage', $detector->detectEnvironment('_stage'));
+        $this->assertEquals('stage', $detector->detectEnvironment('_stage_'));
+        $this->assertEquals('stage', $detector->detectEnvironment('_stage.php'));
+        $this->assertEquals('stage', $detector->detectEnvironment('foo_stage'));
+        $this->assertEquals('stage', $detector->detectEnvironment('foo_stage.php'));
+        $this->assertNull($detector->detectEnvironment('stagefoo'));
+        $this->assertNull($detector->detectEnvironment('foostage'));
+        $this->assertNull($detector->detectEnvironment('_stagefoo'));
+
         $this->assertNull($detector->detectEnvironment('foo/bar'));
 
         $this->assertFalse($detector->detectEnvironment('dist.'));
